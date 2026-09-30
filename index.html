@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Ksatria Karakter: Jejak Pelajar Pancasila (Kelas 8 SMP)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        }
+
+        .badge-glow {
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+
+        /* Print styles for Certificate */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            #certificate-card {
+                box-shadow: none !important;
+                border: 4px double #1e293b !important;
+                background: white !important;
+                color: black !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between p-2 sm:p-4 md:p-6 select-none">
+
+    <!-- Top Bar Navigation & Stats (Hidden on Main Menu & Printable Cert) -->
+    <header id="game-header" class="hidden max-w-5xl mx-auto w-full mb-4 no-print">
+        <div class="glass-card rounded-2xl p-3 sm:p-4 shadow-xl border border-slate-700/60">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-3">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <div id="header-avatar" class="text-3xl bg-slate-800 p-2 rounded-xl border border-slate-600">👦</div>
+                    <div>
+                        <h2 id="header-player-name" class="font-bold text-lg text-amber-400 leading-tight">Nama Siswa</h2>
+                        <span id="header-player-class" class="text-xs text-slate-300 font-medium">Kelas 8-A • Ksatria Karakter</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-sky-300 w-full sm:w-auto justify-center">
+                    <span id="current-chapter-title" class="font-semibold">Bab 1: Ujian Sekolah</span>
+                </div>
+            </div>
+
+            <!-- Stats Bar Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                <!-- Stat 1: Integritas -->
+                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                    <div class="flex justify-between font-semibold mb-1 text-emerald-400">
+                        <span>🛡️ Integritas</span>
+                        <span id="stat-integritas-val">50%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="stat-integritas-bar" class="bg-emerald-500 h-full transition-all duration-500 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+                <!-- Stat 2: Empati -->
+                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                    <div class="flex justify-between font-semibold mb-1 text-pink-400">
+                        <span>❤️ Empati</span>
+                        <span id="stat-empati-val">50%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="stat-empati-bar" class="bg-pink-500 h-full transition-all duration-500 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+                <!-- Stat 3: Tanggung Jawab -->
+                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                    <div class="flex justify-between font-semibold mb-1 text-amber-400">
+                        <span>⚖️ Tanggung Jawab</span>
+                        <span id="stat-tj-val">50%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="stat-tj-bar" class="bg-amber-500 h-full transition-all duration-500 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+                <!-- Stat 4: Toleransi & Digital -->
+                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                    <div class="flex justify-between font-semibold mb-1 text-indigo-400">
+                        <span>🌐 Bijak & Toleran</span>
+                        <span id="stat-toleransi-val">50%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="stat-toleransi-bar" class="bg-indigo-500 h-full transition-all duration-500 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto w-full flex-1 flex flex-col justify-center my-auto">
+
+        <!-- SCREEN 1: MAIN MENU & PLAYER SETUP -->
+        <section id="screen-main-menu" class="glass-card rounded-3xl p-5 sm:p-8 md:p-10 text-center shadow-2xl relative overflow-hidden my-auto border border-sky-500/20">
+            <div class="absolute -top-24 -left-24 w-60 h-60 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs sm:text-sm font-semibold mb-4">
+                <span>🎓 Modul Pembelajaran Karakter SMP Kelas 8</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-300 to-emerald-400 mb-3 tracking-tight">
+                Petualangan Ksatria Karakter
+            </h1>
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+                Menjelajahi tantangan kehidupan sekolah, mengambil keputusan bermoral, dan menumbuhkan karakter emas <strong class="text-amber-300">Profil Pelajar Pancasila</strong>.
+            </p>
+
+            <!-- Input Data Siswa & Avatar -->
+            <div class="max-w-xl mx-auto bg-slate-900/90 rounded-2xl p-5 border border-slate-700/80 text-left mb-8 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nama Lengkap Siswa:</label>
+                    <input type="text" id="input-player-name" placeholder="Masukkan nama kamu di sini..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Kelas SMP:</label>
+                        <select id="input-player-class" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+                            <option value="Kelas 8-A">Kelas 8-A</option>
+                            <option value="Kelas 8-B">Kelas 8-B</option>
+                            <option value="Kelas 8-C">Kelas 8-C</option>
+                            <option value="Kelas 8-D">Kelas 8-D</option>
+                            <option value="Kelas 8-E">Kelas 8-E</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Pilih Avatar Game:</label>
+                        <div class="grid grid-cols-4 gap-2" id="avatar-selector">
+                            <button type="button" onclick="selectAvatar('Budi', '👦')" class="avatar-btn active p-2 bg-slate-800 hover:bg-slate-700 border-2 border-sky-500 rounded-xl text-2xl transition text-center" title="Budi (Siswa Tekun)">👦</button>
+                            <button type="button" onclick="selectAvatar('Siti', '👧')" class="avatar-btn p-2 bg-slate-800 hover:bg-slate-700 border-2 border-transparent rounded-xl text-2xl transition text-center" title="Siti (Siswa Bijak)">👧</button>
+                            <button type="button" onclick="selectAvatar('Wayan', '🧑')" class="avatar-btn p-2 bg-slate-800 hover:bg-slate-700 border-2 border-transparent rounded-xl text-2xl transition text-center" title="Wayan (Siswa Kreatif)">🧑</button>
+                            <button type="button" onclick="selectAvatar('Rani', '👩')" class="avatar-btn p-2 bg-slate-800 hover:bg-slate-700 border-2 border-transparent rounded-xl text-2xl transition text-center" title="Rani (Siswa Kritis)">👩</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button onclick="startGame()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-extrabold rounded-2xl shadow-lg hover:shadow-sky-500/25 transition transform hover:-translate-y-0.5 active:translate-y-0 text-base sm:text-lg animate-pulse-slow">
+                    🚀 Mulai Petualangan Karakter
+                </button>
+                <button onclick="toggleInstructionsModal()" class="w-full sm:w-auto px-6 py-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-2xl border border-slate-700 transition text-sm sm:text-base">
+                    📜 Panduan Bermain
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: SCENARIO / STORY CHAPTER VIEW -->
+        <section id="screen-story" class="hidden glass-card rounded-3xl p-5 sm:p-8 shadow-2xl border border-slate-700/80">
+            <!-- Chapter Badge & Title -->
+            <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-3">
+                <span id="chapter-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                    Bab 1
+                </span>
+                <span id="chapter-progress-text" class="text-xs text-slate-400 font-semibold">Langkah 1 dari 8</span>
+            </div>
+
+            <!-- Narrative Card -->
+            <div class="bg-slate-900/80 rounded-2xl p-5 border border-slate-800 mb-6">
+                <div class="flex items-start gap-4">
+                    <div id="npc-avatar" class="text-4xl bg-slate-800 p-3 rounded-2xl border border-slate-700 shrink-0">
+                        📱
+                    </div>
+                    <div>
+                        <h3 id="scenario-title" class="text-xl font-bold text-sky-300 mb-2">Bocoran Kunci Jawaban di Grup WhatsApp</h3>
+                        <p id="scenario-description" class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                            Malam sebelum Penilaian Akhir Semester (PAS) Matematika, handphone kamu berdering. Salah satu teman dekatmu mengirimkan file berisi "Bocoran Kunci Jawaban PAS". Dia mengajakmu memakai kunci jawaban tersebut agar nilai kelas kalian bagus bersama. Apa tindakan yang kamu ambil?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Choice Options Container -->
+            <div class="space-y-3" id="choices-container">
+                <!-- Choice buttons injected via JS -->
+            </div>
+        </section>
+
+        <!-- SCREEN 3: MINI-GAME CONTAINER -->
+        <section id="screen-minigame" class="hidden glass-card rounded-3xl p-5 sm:p-8 shadow-2xl border border-sky-500/30">
+            <div id="minigame-content">
+                <!-- Dynamic Mini Game Views injected via JS -->
+            </div>
+        </section>
+
+        <!-- SCREEN 4: EVALUATION & CERTIFICATE -->
+        <section id="screen-certificate" class="hidden space-y-6">
+            <!-- Evaluation Summary Cards -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 no-print border border-emerald-500/30">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-3 bg-emerald-500/20 rounded-full text-emerald-400 text-3xl mb-2">🏆</div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Petualangan Selesai!</h2>
+                    <p class="text-slate-300 text-sm mt-1">Berikut adalah Laporan Analisis & Capaian Karakter Profil Pelajar Pancasila kamu.</p>
+                </div>
+
+                <!-- Final Scores & Status -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Statistik Nilai Karakter</h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <div class="flex justify-between font-semibold mb-1">
+                                    <span>🛡️ Integritas & Kejujuran</span>
+                                    <span id="final-integritas" class="text-emerald-400">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div id="bar-final-integritas" class="bg-emerald-500 h-full rounded-full" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-semibold mb-1">
+                                    <span>❤️ Empati & Gotong Royong</span>
+                                    <span id="final-empati" class="text-pink-400">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div id="bar-final-empati" class="bg-pink-500 h-full rounded-full" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-semibold mb-1">
+                                    <span>⚖️ Tanggung Jawab & Kemandirian</span>
+                                    <span id="final-tj" class="text-amber-400">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div id="bar-final-tj" class="bg-amber-500 h-full rounded-full" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-semibold mb-1">
+                                    <span>🌐 Toleransi & Bijak Digital</span>
+                                    <span id="final-toleransi" class="text-indigo-400">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div id="bar-final-toleransi" class="bg-indigo-500 h-full rounded-full" style="width:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Predikat Karakter Siswa</h3>
+                            <div id="predicate-badge" class="text-xl font-extrabold text-amber-300 mb-2">Pelajar Pancasila Utama</div>
+                            <p id="predicate-desc" class="text-xs text-slate-300 leading-relaxed">
+                                Kamu menunjukkan komitmen moral yang sangat tinggi, mampu mengambil keputusan jujur, bijak, dan penuh empati dalam berbagai situasi sosial sekolah.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 mt-4">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Lencana Penghargaan Terbuka:</h4>
+                            <div id="unlocked-badges" class="flex flex-wrap gap-2">
+                                <!-- Badges dynamic -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print & Restart Buttons -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pt-2">
+                    <button onclick="window.print()" class="px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        🖨️ Cetak / Simpan PDF Sertifikat
+                    </button>
+                    <button onclick="restartGame()" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition">
+                        🔄 Ulangi Petualangan
+                    </button>
+                </div>
+            </div>
+
+            <!-- PRINTABLE CERTIFICATE CARD -->
+            <div id="certificate-card" class="bg-slate-900 rounded-3xl p-8 border-4 border-amber-500/40 shadow-2xl text-center relative overflow-hidden max-w-4xl mx-auto">
+                <!-- Certificate Border Styling -->
+                <div class="border-2 border-dashed border-amber-400/30 p-6 rounded-2xl relative">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-left">
+                            <span class="text-xs font-bold text-amber-400 tracking-widest uppercase block">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</span>
+                            <span class="text-xs text-slate-300">Modul Karakter Siswa SMP Kelas 8</span>
+                        </div>
+                        <div class="text-3xl">🇮🇩</div>
+                    </div>
+
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-amber-300 tracking-wide uppercase mb-1">
+                        SERTIFIKAT KELULUSAN KARAKTER
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-300 font-medium tracking-widest uppercase mb-6">
+                        PROFIL PELAJAR PANCASILA
+                    </p>
+
+                    <p class="text-xs text-slate-300 mb-2">Diberikan kepada siswa hebat:</p>
+                    <h3 id="cert-student-name" class="text-2xl sm:text-3xl font-extrabold text-white underline decoration-amber-400 decoration-2 underline-offset-8 mb-2">
+                        Nama Siswa
+                    </h3>
+                    <p id="cert-student-class" class="text-xs font-semibold text-sky-400 mb-6">Kelas 8-A • SMP Ksatria Indonesia</p>
+
+                    <p class="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed mb-6">
+                        Telah berhasil menyelesaikan seluruh tantangan dilema moral, aksi gotong royong, dan uji etika digital dengan meraih predikat resmi:
+                    </p>
+
+                    <div id="cert-predicate" class="inline-block px-6 py-2 bg-amber-500/20 border-2 border-amber-400 text-amber-300 font-black text-lg sm:text-xl rounded-xl mb-6">
+                        PELAJAR PANCASILA UTAMA
+                    </div>
+
+                    <!-- Certificate Scores Summary Table -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-left max-w-2xl mx-auto bg-slate-800/80 p-3 rounded-xl border border-slate-700 text-xs mb-8">
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">INTEGRITAS</span>
+                            <span id="cert-score-integritas" class="font-bold text-emerald-400">85%</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">EMPATI</span>
+                            <span id="cert-score-empati" class="font-bold text-pink-400">85%</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">TANGGUNG JAWAB</span>
+                            <span id="cert-score-tj" class="font-bold text-amber-400">85%</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">TOLERANSI & DIGITAL</span>
+                            <span id="cert-score-toleransi" class="font-bold text-indigo-400">85%</span>
+                        </div>
+                    </div>
+
+                    <!-- Signatures Area -->
+                    <div class="flex justify-between items-end pt-4 border-t border-slate-700/60 text-xs text-slate-300">
+                        <div class="text-left">
+                            <p class="text-[10px] text-slate-400">Tanggal Penyelesaian:</p>
+                            <p id="cert-date" class="font-semibold text-white">10 Oktober 2026</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="font-semibold text-amber-300">Tim Pembina Karakter SMP</p>
+                            <div class="h-10"></div>
+                            <p class="font-bold text-white">( Sistem Pendidikan Budi Pekerti )</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: Moral Explanation / Feedback Overlay -->
+    <div id="modal-feedback" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-6 border border-slate-700 shadow-2xl text-left animate-pulse-slow">
+            <div class="flex items-center gap-3 mb-3">
+                <div id="feedback-icon" class="text-3xl p-2 bg-slate-800 rounded-xl">✨</div>
+                <div>
+                    <h3 id="feedback-title" class="font-bold text-lg text-white">Refleksi Karakter</h3>
+                    <p id="feedback-subtitle" class="text-xs text-emerald-400 font-semibold">+Integritas (+15) • +Tanggung Jawab (+10)</p>
+                </div>
+            </div>
+            <p id="feedback-explanation" class="text-slate-200 text-xs sm:text-sm leading-relaxed mb-6 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                Penjelasan etika dan budi pekerti akan ditampilkan di sini.
+            </p>
+            <button onclick="closeFeedbackModal()" class="w-full py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition text-sm">
+                Lanjutkan Petualangan ➔
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: Instructions Guide -->
+    <div id="modal-instructions" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-6 border border-slate-700 shadow-2xl text-left">
+            <h3 class="text-xl font-bold text-sky-300 mb-3 flex items-center gap-2">
+                📜 Cara Bermain & Tujuan Modul
+            </h3>
+            <div class="text-xs sm:text-sm text-slate-300 space-y-3 leading-relaxed max-h-80 overflow-y-auto pr-2 mb-6">
+                <p><strong>1. Jalani Alur Cerita:</strong> Kamu akan menghadapi 5 bab situasi kehidupan nyata siswa SMP kelas 8 (Ujian, Kantin, Tugas Kelompok, Media Sosial, & Pemilihan OSIS).</p>
+                <p><strong>2. Ambil Decision/Keputusan Bermoral:</strong> Pilihanmu mempengaruhi 4 indikator utama karakter (Integritas, Empati, Tanggung Jawab, & Toleransi).</p>
+                <p><strong>3. Selesaikan Mini-Games:</strong> Uji ketangkasan digital dan gotong royong di sela-sela bab cerita.</p>
+                <p><strong>4. Dapatkan Sertifikat Resmi:</strong> Di akhir petualangan, cetak sertifikat capaian karakter kamu sebagai bukti siswa berkarakter Profil Pelajar Pancasila!</p>
+            </div>
+            <button onclick="toggleInstructionsModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl border border-slate-700 transition text-sm">
+                Mengerti & Tutup
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-800/60 mt-6 no-print">
+        © 2026 Petualangan Ksatria Karakter • Media Pembelajaran Interaktif SMP Kelas 8
+    </footer>
+
+    <script>
+        /* WEB AUDIO API SYNTHESIZER (Pure JS FX without external files) */
+        const AudioFX = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playClick() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.05);
+            },
+            playSuccess() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(now + 0.35);
+            },
+            playWrong() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(140, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(now + 0.25);
+            },
+            playFanfare() {
+                this.init();
+                const notes = [440, 554.37, 659.25, 880];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    const now = this.ctx.currentTime + (idx * 0.12);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                });
+            }
+        };
+
+        /* GAME STATE MANAGER */
+        const gameState = {
+            playerName: '',
+            playerClass: 'Kelas 8-A',
+            avatar: { name: 'Budi', emoji: '👦' },
+            stats: {
+                integritas: 50,
+                empati: 50,
+                tanggungJawab: 50,
+                toleransi: 50
+            },
+            currentStep: 0,
+            badges: []
+        };
+
+        /* GAME STEPS DEFINITIONS (Chapters + MiniGames Sequence) */
+        const gameSteps = [
+            // STEP 0: Chapter 1
+            {
+                type: 'story',
+                chapterNumber: 'Bab 1',
+                title: 'Kejujuran saat Ujian Sekolah',
+                npcEmoji: '📱',
+                description: 'Malam sebelum Penilaian Akhir Semester (PAS) Matematika, handphone kamu berdering. Teman dekatmu mengirimkan file berisi "Bocoran Kunci Jawaban PAS" di grup WA. Dia mengajakmu memakainya bersama agar nilai kalian tinggi. Apa yang kamu lakukan?',
+                choices: [
+                    {
+                        text: '❌ Mengabaikan bocoran tersebut, dan mengingatkan teman-teman di grup secara bijak bahwa mencontek merusak kejujuran.',
+                        effects: { integritas: 20, tanggungJawab: 10 },
+                        badge: 'Lencana Kejujuran',
+                        explanation: 'Sangat Bijak! Kejujuran adalah fondasi tertinggi integritas (Profil Pelajar Pancasila: Mandiri & Bernalar Kritis). Nilai asli dari hasil usaha sendiri jauh lebih berharga daripada nilai tinggi dari kecurangan.'
+                    },
+                    {
+                        text: '⚠️ Menyimpan sendiri kunci jawaban itu tanpa menyebarkan, tetapi menggunakannya saat kesulitan ujian.',
+                        effects: { integritas: -15, tanggungJawab: -5 },
+                        explanation: 'Memanfaatkan kecurangan secara diam-diam tetap mencerminkan ketidakjujuran. Kejujuran membutuhkan keberanian untuk menolak kompromi kecurangan.'
+                    },
+                    {
+                        text: '📤 Membagikan file bocoran tersebut ke teman-teman terdekat lainnya agar dianggap setia kawan.',
+                        effects: { integritas: -25, toleransi: -10 },
+                        explanation: 'Solidaritas dalam keburukan/kecurangan adalah bentuk "Setia Kawan yang Salah". Setia kawan yang sejati adalah saling mengajak dalam kebaikan.'
+                    }
+                ]
+            },
+
+            // STEP 1: Mini-Game 1
+            {
+                type: 'minigame_1'
+            },
+
+            // STEP 2: Chapter 2
+            {
+                type: 'story',
+                chapterNumber: 'Bab 2',
+                title: 'Empati & Anti-Bullying di Kantin',
+                npcEmoji: '🥪',
+                description: 'Di kantin sekolah, kamu melihat murid baru (Bim-Bim) sedang duduk sendirian. Sekelompok siswa menertawakan bekal makanan tradisional yang dibawanya dan mengejek sepatunya yang sudah usang. Apa tindakanmu?',
+                choices: [
+                    {
+                        text: '❤️ Membawa bekalmu dan duduk bersama Bim-Bim, mengajaknya ngobrol hangat serta menegur teman yang mengejek secara sopan.',
+                        effects: { empati: 25, integritas: 10 },
+                        badge: 'Pahlawan Anti-Bullying',
+                        explanation: 'Luar Biasa! Sikap empatimu memberikan rasa aman dan menghargai martabat sesama. Mencegah perundungan (bullying) adalah wujud nyata budi pekerti luhur.'
+                    },
+                    {
+                        text: '🙈 Diam saja dan berpura-pura tidak melihat karena takut ikut dimusuhi oleh kelompok populer.',
+                        effects: { empati: -10, tanggungJawab: -10 },
+                        explanation: 'Sikap acuh tak acuh (Bystander effect) membiarkan kejahatan perundungan terus terjadi. Ksatria karakter berani berpihak pada kebenaran.'
+                    },
+                    {
+                        text: '🤳 Merekam kejadian mengejek tersebut dan tertawa bersamanya untuk bahan lelucon status media sosial.',
+                        effects: { empati: -30, toleransi: -20 },
+                        explanation: 'Tindakan ini tergolong Cyberbullying dan merendahkan harkat orang lain. Ingatlah prinsip emas: "Jangan lakukan pada orang lain apa yang kamu tidak ingin terjadi padamu."'
+                    }
+                ]
+            },
+
+            // STEP 3: Mini-Game 2
+            {
+                type: 'minigame_2'
+            },
+
+            // STEP 4: Chapter 3
+            {
+                type: 'story',
+                chapterNumber: 'Bab 3',
+                title: 'Gotong Royong & Kerja Kelompok',
+                npcEmoji: '👥',
+                description: 'Kelompok IPA kamu mendapat tugas proyek. Salah satu anggota kelompokmu (Doni) sering terlambat dan pasif. Kamu baru tahu bahwa Doni harus membantu menjaga warung orang tuanya yang sedang sakit setiap pulang sekolah. Bagaimana reaksimu?',
+                choices: [
+                    {
+                        text: '🤝 Bicara baik-baik dengan Doni, membagi tugas proyek yang dapat ia kerjakan dari rumah, dan membantunya jika ada kesulitan.',
+                        effects: { empati: 20, tanggungJawab: 15 },
+                        badge: 'Pelopor Gotong Royong',
+                        explanation: 'Hebat! Gotong royong sejati bukan sekadar membagi tugas, melainkan memahami situasi teman dan mencari solusi bersama (Inklusif & Empatis).'
+                    },
+                    {
+                        text: '🚫 Langsung mencoret nama Doni dari laporan kelompok dan melaporkannya ke guru tanpa bertanya alasannya.',
+                        effects: { empati: -20, toleransi: -10 },
+                        explanation: 'Mengambil keputusan sepihak tanpa tabayyun/konfirmasi menunjukkan kurangnya kepedulian sosial terhadap beban kesulitan orang lain.'
+                    },
+                    {
+                        text: '😮‍💨 Mengerjakan seluruh bagian Doni tetapi mengeluh di belakangnya dan membicarakan keburukannya di kelas.',
+                        effects: { integritas: -10, empati: -10 },
+                        explanation: 'Membantu dengan bersungut-sungut dan ghibah merusak pahala kebaikan serta merenggangkan tali silaturahmi antar sesama teman.'
+                    }
+                ]
+            },
+
+            // STEP 5: Chapter 4
+            {
+                type: 'story',
+                chapterNumber: 'Bab 4',
+                title: 'Bijak Media Sosial & Anti-Hoax',
+                npcEmoji: '📲',
+                description: 'Di grup chat angkatan SMP, ada postingan berisi tuduhan fitnah bahwa seorang guru memberikan nilai emas hanya kepada siswa kaya. Berita tersebut memicu ujaran kebencian di kolom komentar. Bagaimana kamu meresponsnya?',
+                choices: [
+                    {
+                        text: '🔍 Mengingatkan anggota grup untuk tidak menyebarkan gosip tanpa bukti (Saring sebelum Sharing) dan mengajak konfirmasi ke wali kelas.',
+                        effects: { toleransi: 25, integritas: 10 },
+                        badge: 'Duta Digital Bijak',
+                        explanation: 'Sangat Tepat! Berpikir kritis (Bernalar Kritis) sebelum mempercayai atau menyebarkan informasi adalah benteng utama melawan Hoaks dan Fitnah Digital.'
+                    },
+                    {
+                        text: '🔥 Ikut membagikan postingan itu ke story media sosial pribadi agar semakin banyak murid yang tahu.',
+                        effects: { toleransi: -25, integritas: -15 },
+                        explanation: 'Menyebarkan rumor tanpa verifikasi termasuk bentuk penyebaran fitnah digital yang diatur etika serta hukum undang-undang informasi.'
+                    },
+                    {
+                        text: '😶 Membaca saja dan membiarkan rumor terus berkembang liar tanpa kepedulian.',
+                        effects: { tanggungJawab: -5 },
+                        explanation: 'Menjadi penonton pasif saat fitnah tersebar membiarkan iklim kebohongan merusak lingkungan sekolah.'
+                    }
+                ]
+            },
+
+            // STEP 6: Mini-Game 3
+            {
+                type: 'minigame_3'
+            },
+
+            // STEP 7: Chapter 5
+            {
+                type: 'story',
+                chapterNumber: 'Bab 5',
+                title: 'Toleransi & Menghargai Perbedaan',
+                npcEmoji: '🗳️',
+                description: 'Saat pemilihan Ketua OSIS SMP, terdapat dua calon kuat. Calon A sangat kompeten dan memiliki program kerja nyata, namun berasal dari latar belakang agama/suku minoritas. Calon B berasal dari kelompok yang sama denganmu tetapi kurang aktif. Pilihanmu?',
+                choices: [
+                    {
+                        text: '🌟 Memilih Calon A berdasarkan kualifikasi, visi, dan kemampuan kepemimpinannya tanpa memandang suku/agama.',
+                        effects: { toleransi: 25, integritas: 10 },
+                        badge: 'Ksatria Kebinekaan',
+                        explanation: 'Luar Biasa! Ini adalah wujud nyata nilai "Berkebinekaan Global" dan Kebinekaan Tunggal Ika. Pemimpin dipilih berdasarkan keadilan dan kompetensi.'
+                    },
+                    {
+                        text: '🛑 Menolak memilih Calon A hanya karena perbedaan latar belakang agama/suku.',
+                        effects: { toleransi: -30 },
+                        explanation: 'Sikap diskriminatif merusak persatuan bangsa dan bertentangan langsung dengan nilai Pancasila.'
+                    },
+                    {
+                        text: '🎲 Ikut-ikutan pilihan mayoritas teman geng tanpa mempertimbangkan visi misi calon.',
+                        effects: { tanggungJawab: -10, integritas: -5 },
+                        explanation: 'Gunakan hak pilihmu secara mandiri dan bertanggung jawab, bukan sekadar mengekor pada orang lain.'
+                    }
+                ]
+            }
+        ];
+
+        /* AVATAR SELECTION */
+        function selectAvatar(name, emoji) {
+            AudioFX.playClick();
+            gameState.avatar = { name, emoji };
+            document.querySelectorAll('.avatar-btn').forEach(btn => {
+                btn.classList.remove('border-sky-500', 'active');
+                btn.classList.add('border-transparent');
+            });
+            event.currentTarget.classList.add('border-sky-500', 'active');
+            event.currentTarget.classList.remove('border-transparent');
+        }
+
+        /* START GAME */
+        function startGame() {
+            AudioFX.playClick();
+            const nameInput = document.getElementById('input-player-name').value.trim();
+            if (!nameInput) {
+                alert('Silakan masukkan nama kamu terlebih dahulu!');
+                return;
+            }
+
+            gameState.playerName = nameInput;
+            gameState.playerClass = document.getElementById('input-player-class').value;
+            gameState.currentStep = 0;
+
+            // Update UI Header
+            document.getElementById('header-player-name').innerText = gameState.playerName;
+            document.getElementById('header-player-class').innerText = `${gameState.playerClass} • Ksatria Karakter`;
+            document.getElementById('header-avatar').innerText = gameState.avatar.emoji;
+
+            document.getElementById('screen-main-menu').classList.add('hidden');
+            document.getElementById('game-header').classList.remove('hidden');
+
+            renderCurrentStep();
+        }
+
+        /* RENDER STEP ROUTER */
+        function renderCurrentStep() {
+            updateStatsUI();
+
+            if (gameState.currentStep >= gameSteps.length) {
+                showFinalEvaluation();
+                return;
+            }
+
+            const step = gameSteps[gameState.currentStep];
+
+            // Hide screens
+            document.getElementById('screen-story').classList.add('hidden');
+            document.getElementById('screen-minigame').classList.add('hidden');
+
+            if (step.type === 'story') {
+                renderStoryStep(step);
+            } else if (step.type === 'minigame_1') {
+                renderMiniGame1();
+            } else if (step.type === 'minigame_2') {
+                renderMiniGame2();
+            } else if (step.type === 'minigame_3') {
+                renderMiniGame3();
+            }
+        }
+
+        /* RENDER STORY STEP */
+        function renderStoryStep(step) {
+            const screenStory = document.getElementById('screen-story');
+            screenStory.classList.remove('hidden');
+
+            document.getElementById('chapter-badge').innerText = step.chapterNumber;
+            document.getElementById('current-chapter-title').innerText = `${step.chapterNumber}: ${step.title}`;
+            document.getElementById('chapter-progress-text').innerText = `Langkah ${gameState.currentStep + 1} dari ${gameSteps.length}`;
+
+            document.getElementById('npc-avatar').innerText = step.npcEmoji;
+            document.getElementById('scenario-title').innerText = step.title;
+            document.getElementById('scenario-description').innerText = step.description;
+
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+
+            step.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 hover:border-sky-500 rounded-2xl transition duration-200 text-xs sm:text-sm font-medium text-slate-100 flex items-start gap-3 shadow-md hover:shadow-sky-500/10';
+                btn.innerHTML = `<span class="bg-slate-900 px-2 py-1 rounded-lg text-xs font-bold text-sky-400 border border-slate-700 shrink-0">${idx+1}</span> <span>${choice.text}</span>`;
+                btn.onclick = () => handleChoiceSelect(choice);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        /* HANDLE CHOICE SELECTION */
+        function handleChoiceSelect(choice) {
+            // Apply Stat Effects
+            for (let stat in choice.effects) {
+                gameState.stats[stat] = Math.max(0, Math.min(100, gameState.stats[stat] + choice.effects[stat]));
+            }
+
+            // Award Badge if available
+            if (choice.badge && !gameState.badges.includes(choice.badge)) {
+                gameState.badges.push(choice.badge);
+            }
+
+            // Sound
+            const totalGain = Object.values(choice.effects).reduce((a, b) => a + b, 0);
+            if (totalGain >= 0) {
+                AudioFX.playSuccess();
+            } else {
+                AudioFX.playWrong();
+            }
+
+            // Prepare feedback string
+            let subtitleArr = [];
+            for (let stat in choice.effects) {
+                const val = choice.effects[stat];
+                const sign = val > 0 ? `+${val}` : `${val}`;
+                subtitleArr.push(`${stat.toUpperCase()} (${sign})`);
+            }
+
+            showFeedbackModal(
+                totalGain >= 0 ? '✨ Keputusan Bijak!' : '⚠️ Refleksi Evaluasi',
+                subtitleArr.join(' • '),
+                choice.explanation,
+                totalGain >= 0 ? '👍' : '💡'
+            );
+        }
+
+        /* MINI-GAME 1: SARING SEBELUM SHARING (HOAX VS FACT) */
+        let mg1Posts = [
+            { id: 1, text: "🚨 HOT NEWS: Sekolah akan meliburkan siswa selama 3 bulan tanpa alasan jelas! Sebarkan!", isHoax: true, reason: "Hoaks Sensasional tanpa sumber resmi!" },
+            { id: 2, text: "📌 Pengumuman OSIS: Lomba Kebersihan Kelas diadakan hari Jumat depan. Harap membawa perlengkapan.", isHoax: false, reason: "Pengumuman Positif dan Resmi." },
+            { id: 3, text: "⚠️ Hati-hati! Ada akun palsu mengasnamakan Guru meminta pulsa di grup medsos.", isHoax: false, reason: "Peringatan Waspada Etika Digital." },
+            { id: 4, text: "💣 Anak kelas 8-B dituduh berbuat jahat, yuk serang medsosnya rame-rame!", isHoax: true, reason: "Ujaran Kebencian & Provokasi Cyberbullying!" }
+        ];
+        let mg1Index = 0;
+
+        function renderMiniGame1() {
+            document.getElementById('current-chapter-title').innerText = 'Mini-Game 1: Saring Sebelum Sharing';
+            const screen = document.getElementById('screen-minigame');
+            screen.classList.remove('hidden');
+
+            mg1Index = 0;
+            updateMG1UI();
+        }
+
+        function updateMG1UI() {
+            const container = document.getElementById('minigame-content');
+            if (mg1Index >= mg1Posts.length) {
+                gameState.stats.toleransi = Math.min(100, gameState.stats.toleransi + 15);
+                AudioFX.playFanfare();
+                container.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-4xl mb-2">🎉</div>
+                        <h3 class="text-xl font-bold text-emerald-400 mb-2">Mini-Game Selesai!</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-4">Kamu berhasil memilah postingan media sosial dengan cermat dan kritis. (+15 Bijak Digital)</p>
+                        <button onclick="nextStep()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition text-sm">
+                            Lanjut ke Bab Cerita Berikutnya ➔
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const current = mg1Posts[mg1Index];
+            container.innerHTML = `
+                <div class="text-center max-w-lg mx-auto">
+                    <span class="px-3 py-1 bg-sky-500/20 text-sky-300 rounded-full text-xs font-bold border border-sky-500/30 uppercase tracking-wider">
+                        Mini-Game 1: Detektor Etika Digital (${mg1Index + 1}/${mg1Posts.length})
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-bold text-white mt-3 mb-2">Saring Sebelum Sharing 📲</h3>
+                    <p class="text-xs text-slate-300 mb-6">Tentukan apakah postingan di bawah ini tergolong Hoaks/Berbahaya atau Informasi Fakta/Positif.</p>
+
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 text-left mb-6 shadow-inner">
+                        <div class="flex items-center gap-2 mb-2 text-xs text-slate-400">
+                            <span>👤 Pengirim Anonim</span>
+                            <span>•</span>
+                            <span>Baru saja</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-100">${current.text}</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="checkMG1(true)" class="py-3 px-4 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 font-bold rounded-xl transition text-xs sm:text-sm">
+                            ❌ Hoaks / Berbahaya
+                        </button>
+                        <button onclick="checkMG1(false)" class="py-3 px-4 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold rounded-xl transition text-xs sm:text-sm">
+                            ✅ Fakta / Positif
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMG1(userGuessedHoax) {
+            const current = mg1Posts[mg1Index];
+            if (userGuessedHoax === current.isHoax) {
+                AudioFX.playSuccess();
+            } else {
+                AudioFX.playWrong();
+            }
+            mg1Index++;
+            updateMG1UI();
+        }
+
+        /* MINI-GAME 2: GOTONG ROYONG AKSI HIJAU (PEMILAHAN SAMPAH & LINGKUNGAN) */
+        let mg2Items = [
+            { name: "🧃 Botol Plastik Minuman", type: "anorganik", target: "Anorganik" },
+            { name: "🍌 Kulit Pisang Bekas Bekal", type: "organik", target: "Organik" },
+            { name: "🚰 Keran Air Sekolah Terbuka Lupa Dimatikan", type: "aksi", target: "Aksi Hijau" },
+            { name: "📄 Kertas HVS Bekas Catatan", type: "anorganik", target: "Anorganik" }
+        ];
+        let mg2Index = 0;
+
+        function renderMiniGame2() {
+            document.getElementById('current-chapter-title').innerText = 'Mini-Game 2: Gotong Royong Aksi Hijau';
+            const screen = document.getElementById('screen-minigame');
+            screen.classList.remove('hidden');
+
+            mg2Index = 0;
+            updateMG2UI();
+        }
+
+        function updateMG2UI() {
+            const container = document.getElementById('minigame-content');
+            if (mg2Index >= mg2Items.length) {
+                gameState.stats.empati = Math.min(100, gameState.stats.empati + 15);
+                AudioFX.playFanfare();
+                container.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-4xl mb-2">🌿</div>
+                        <h3 class="text-xl font-bold text-emerald-400 mb-2">Aksi Hijau Berhasil!</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-4">Kamu berhasil menjaga kebersihan dan kelestarian lingkungan sekolah bersama-sama. (+15 Empati Lingkungan)</p>
+                        <button onclick="nextStep()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition text-sm">
+                            Lanjut ke Bab Cerita Berikutnya ➔
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const current = mg2Items[mg2Index];
+            container.innerHTML = `
+                <div class="text-center max-w-lg mx-auto">
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-bold border border-emerald-500/30 uppercase tracking-wider">
+                        Mini-Game 2: Aksi Lingkungan (${mg2Index + 1}/${mg2Items.length})
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-bold text-white mt-3 mb-2">Gotong Royong Aksi Hijau 🗑️</h3>
+                    <p class="text-xs text-slate-300 mb-6">Pilih tindakan/kategori pemilahan yang tepat untuk item lingkungan di bawah ini!</p>
+
+                    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700 mb-6 shadow-inner">
+                        <div class="text-3xl mb-2">${current.name.split(' ')[0]}</div>
+                        <p class="text-base font-bold text-amber-300">${current.name}</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <button onclick="checkMG2('organik')" class="py-3 px-2 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 font-bold rounded-xl transition text-xs">
+                            🍂 Tong Organik
+                        </button>
+                        <button onclick="checkMG2('anorganik')" class="py-3 px-2 bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold rounded-xl transition text-xs">
+                            ♻️ Tong Anorganik
+                        </button>
+                        <button onclick="checkMG2('aksi')" class="py-3 px-2 bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-700 font-bold rounded-xl transition text-xs">
+                            💧 Aksi Matikan/Rawat
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMG2(selectedType) {
+            const current = mg2Items[mg2Index];
+            if (selectedType === current.type) {
+                AudioFX.playSuccess();
+            } else {
+                AudioFX.playWrong();
+            }
+            mg2Index++;
+            updateMG2UI();
+        }
+
+        /* MINI-GAME 3: KUIS REFLEKSI ETIKA (QUIZ SULIT SIKAP SMP) */
+        let mg3Questions = [
+            {
+                q: "Apa arti dari nilai 'Bernalar Kritis' dalam Profil Pelajar Pancasila?",
+                options: ["Sering membantah perintah guru", "Memproses informasi secara objektif & mengevaluasinya", "Mencari kesalahan orang lain"],
+                correct: 1
+            },
+            {
+                q: "Ketika melihat temanmu tidak sengaja merusakkan fasilitas sekolah, tindakan jujur adalah...",
+                options: ["Melaporkan teman ke polisi", "Menasihati teman agar mengaku jujur kepada pihak sekolah", "Pura-pura tidak melihat agar teman tidak marah"],
+                correct: 1
+            }
+        ];
+        let mg3Index = 0;
+
+        function renderMiniGame3() {
+            document.getElementById('current-chapter-title').innerText = 'Mini-Game 3: Kuis Refleksi Etika';
+            const screen = document.getElementById('screen-minigame');
+            screen.classList.remove('hidden');
+
+            mg3Index = 0;
+            updateMG3UI();
+        }
+
+        function updateMG3UI() {
+            const container = document.getElementById('minigame-content');
+            if (mg3Index >= mg3Questions.length) {
+                gameState.stats.tanggungJawab = Math.min(100, gameState.stats.tanggungJawab + 15);
+                AudioFX.playFanfare();
+                container.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-4xl mb-2">🎓</div>
+                        <h3 class="text-xl font-bold text-emerald-400 mb-2">Kuis Refleksi Selesai!</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-4">Pemahaman etika budi pekerti kamu sangat tajam. (+15 Tanggung Jawab)</p>
+                        <button onclick="nextStep()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition text-sm">
+                            Lanjut ke Bab Cerita Terakhir ➔
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const current = mg3Questions[mg3Index];
+            container.innerHTML = `
+                <div class="text-center max-w-lg mx-auto">
+                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-bold border border-amber-500/30 uppercase tracking-wider">
+                        Mini-Game 3: Evaluasi Etika (${mg3Index + 1}/${mg3Questions.length})
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-bold text-white mt-3 mb-2">Kuis Refleksi Karakter ❓</h3>
+
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 text-left mb-6 shadow-inner">
+                        <p class="text-sm font-semibold text-slate-100">${current.q}</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        ${current.options.map((opt, i) => `
+                            <button onclick="checkMG3(${i})" class="w-full text-left p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition text-xs sm:text-sm text-slate-200 font-medium">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMG3(selectedIdx) {
+            const current = mg3Questions[mg3Index];
+            if (selectedIdx === current.correct) {
+                AudioFX.playSuccess();
+            } else {
+                AudioFX.playWrong();
+            }
+            mg3Index++;
+            updateMG3UI();
+        }
+
+        /* NAVIGATION & MODAL HELPERS */
+        function nextStep() {
+            gameState.currentStep++;
+            renderCurrentStep();
+        }
+
+        function showFeedbackModal(title, subtitle, explanation, icon) {
+            document.getElementById('feedback-title').innerText = title;
+            document.getElementById('feedback-subtitle').innerText = subtitle;
+            document.getElementById('feedback-explanation').innerText = explanation;
+            document.getElementById('feedback-icon').innerText = icon;
+
+            document.getElementById('modal-feedback').classList.remove('hidden');
+            document.getElementById('modal-feedback').classList.add('flex');
+        }
+
+        function closeFeedbackModal() {
+            AudioFX.playClick();
+            document.getElementById('modal-feedback').classList.add('hidden');
+            document.getElementById('modal-feedback').classList.remove('flex');
+            nextStep();
+        }
+
+        function toggleInstructionsModal() {
+            AudioFX.playClick();
+            const modal = document.getElementById('modal-instructions');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('stat-integritas-val').innerText = `${gameState.stats.integritas}%`;
+            document.getElementById('stat-integritas-bar').style.width = `${gameState.stats.integritas}%`;
+
+            document.getElementById('stat-empati-val').innerText = `${gameState.stats.empati}%`;
+            document.getElementById('stat-empati-bar').style.width = `${gameState.stats.empati}%`;
+
+            document.getElementById('stat-tj-val').innerText = `${gameState.stats.tanggungJawab}%`;
+            document.getElementById('stat-tj-bar').style.width = `${gameState.stats.tanggungJawab}%`;
+
+            document.getElementById('stat-toleransi-val').innerText = `${gameState.stats.toleransi}%`;
+            document.getElementById('stat-toleransi-bar').style.width = `${gameState.stats.toleransi}%`;
+        }
+
+        function showFinalEvaluation() {
+            AudioFX.playFanfare();
+
+            // Hide Game Header & Screens
+            document.getElementById('screen-story').classList.add('hidden');
+            document.getElementById('screen-minigame').classList.add('hidden');
+            document.getElementById('screen-certificate').classList.remove('hidden');
+
+            // Calculate Averages & Predicates
+            const avg = Math.round((gameState.stats.integritas + gameState.stats.empati + gameState.stats.tanggungJawab + gameState.stats.toleransi) / 4);
+
+            let predicate = 'Pelajar Pancasila Unggul';
+            let predicateDesc = 'Kamu menunjukkan integritas, empati, dan kepedulian yang sangat tinggi dalam kehidupan sekolah.';
+
+            if (avg >= 85) {
+                predicate = 'Pelajar Pancasila Utama 🏆';
+                predicateDesc = 'Luar Biasa! Kamu adalah teladan moral sempurna yang mencerminkan seluruh dimensi Profil Pelajar Pancasila.';
+            } else if (avg >= 70) {
+                predicate = 'Pelajar Pancasila Berkembang 🌟';
+                predicateDesc = 'Sangat Baik! Kamu memiliki pemahaman karakter luhur dan konsisten dalam mengambil keputusan positif.';
+            } else {
+                predicate = 'Pelajar Pancasila Perlu Pembiasaan ☘️';
+                predicateDesc = 'Baik! Teruslah berlatih mempertimbangkan dampak moral dalam setiap tindakanmu sehari-hari.';
+            }
+
+            // Update Summary Dashboard UI
+            document.getElementById('final-integritas').innerText = `${gameState.stats.integritas}%`;
+            document.getElementById('bar-final-integritas').style.width = `${gameState.stats.integritas}%`;
+
+            document.getElementById('final-empati').innerText = `${gameState.stats.empati}%`;
+            document.getElementById('bar-final-empati').style.width = `${gameState.stats.empati}%`;
+
+            document.getElementById('final-tj').innerText = `${gameState.stats.tanggungJawab}%`;
+            document.getElementById('bar-final-tj').style.width = `${gameState.stats.tanggungJawab}%`;
+
+            document.getElementById('final-toleransi').innerText = `${gameState.stats.toleransi}%`;
+            document.getElementById('bar-final-toleransi').style.width = `${gameState.stats.toleransi}%`;
+
+            document.getElementById('predicate-badge').innerText = predicate;
+            document.getElementById('predicate-desc').innerText = predicateDesc;
+
+            // Render Badges
+            const badgesContainer = document.getElementById('unlocked-badges');
+            badgesContainer.innerHTML = '';
+            if (gameState.badges.length === 0) {
+                gameState.badges.push('Ksatria Karakter Muda');
+            }
+            gameState.badges.forEach(b => {
+                const badgeEl = document.createElement('span');
+                badgeEl.className = 'px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-400/40 rounded-lg text-xs font-bold badge-glow';
+                badgeEl.innerText = `🏅 ${b}`;
+                badgesContainer.appendChild(badgeEl);
+            });
+
+            // Populate Certificate
+            document.getElementById('cert-student-name').innerText = gameState.playerName;
+            document.getElementById('cert-student-class').innerText = `${gameState.playerClass} • Ksatria Karakter SMP`;
+            document.getElementById('cert-predicate').innerText = predicate;
+
+            document.getElementById('cert-score-integritas').innerText = `${gameState.stats.integritas}%`;
+            document.getElementById('cert-score-empati').innerText = `${gameState.stats.empati}%`;
+            document.getElementById('cert-score-tj').innerText = `${gameState.stats.tanggungJawab}%`;
+            document.getElementById('cert-score-toleransi').innerText = `${gameState.stats.toleransi}%`;
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('cert-date').innerText = new Date().toLocaleDateString('id-ID', options);
+        }
+
+        function restartGame() {
+            AudioFX.playClick();
+            gameState.stats = { integritas: 50, empati: 50, tanggungJawab: 50, toleransi: 50 };
+            gameState.badges = [];
+            gameState.currentStep = 0;
+
+            document.getElementById('screen-certificate').classList.add('hidden');
+            document.getElementById('game-header').classList.add('hidden');
+            document.getElementById('screen-main-menu').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
